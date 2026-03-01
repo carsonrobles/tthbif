@@ -15,14 +15,14 @@ module tthbif #(
   input  [$clog2(NUM_FLOP_TAP)-1:0] tx_flop_tap_sel_i,
   input  [$clog2(NUM_COMB_TAP)-1:0] tx_comb_tap_sel_i,
 
-  input  [           NUM_LANES-1:0] tthbif_rx_i,
-  output [           NUM_LANES-1:0] tthbif_tx_o
+  input  [           NUM_LANES-1:0] rx_i,
+  output [           NUM_LANES-1:0] tx_o
 );
 
   wire rst_n = rst_ni & en_i;
 
-  wire [NUM_LANES-1:0] tthbif_rx;
-  wire [NUM_LANES-1:0] tthbif_tx;
+  wire [NUM_LANES-1:0] rx;
+  wire [NUM_LANES-1:0] tx;
 
   for (genvar gi=0; gi<NUM_LANES; gi++) begin: g_lanes
 
@@ -37,8 +37,8 @@ module tthbif #(
       .comb_tap_sel_i ( rx_comb_tap_sel_i ),
       .flop_tap_sel_i ( rx_flop_tap_sel_i ),
     
-      .rx_i           ( tthbif_rx_i[gi]   ),
-      .rx_o           ( tthbif_rx[gi]     )
+      .rx_i           ( rx_i[gi]          ),
+      .rx_o           ( rx[gi]            )
     );
 
     tthbif_tx_lane #(
@@ -52,12 +52,12 @@ module tthbif #(
       .comb_tap_sel_i ( tx_comb_tap_sel_i ),
       .flop_tap_sel_i ( tx_flop_tap_sel_i ),
     
-      .tx_i           ( tthbif_tx[gi]     ),
-      .tx_o           ( tthbif_tx_o[gi]   )
+      .tx_i           ( tx[gi]            ),
+      .tx_o           ( tx_o[gi]          )
     );
 
     // loop back for now
-    assign tthbif_tx[gi] = tthbif_rx[gi];
+    assign tx[gi] = rx[gi];
 
   end: g_lanes
 
