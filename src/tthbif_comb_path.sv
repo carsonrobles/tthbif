@@ -10,11 +10,11 @@ module tthbif_comb_path #(
   output wire                       sig_o
 );
 
-  wire [NUM_TAP:0] tap;
+  wire [NUM_TAP-1:0] tap;
 
   assign tap[0] = sig_i;
 
-  for (genvar gi=0; gi<NUM_TAP; gi++) begin: g_tap
+  for (genvar gi=0; gi<NUM_TAP-1; gi++) begin: g_tap
 
     wire [NUM_BUF_PER_TAP:0] tap_local;
 
