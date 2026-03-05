@@ -59,7 +59,7 @@ module tthbif #(
       .NUM_BUF_PER_COMB_TAP ( NUM_BUF_PER_COMB_TAP )
     ) u_tx_lane (
       .clk_i          ( clk_i                 ),
-      .rst_ni         ( tx_lane_rst_i[gi]     ),
+      .rst_ni         ( tx_lane_rst_n[gi]     ),
     
       .comb_tap_sel_i ( tx_comb_tap_sel_i[gi] ),
       .flop_tap_sel_i ( tx_flop_tap_sel_i[gi] ),
