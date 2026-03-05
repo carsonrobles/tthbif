@@ -27,13 +27,16 @@ module tthbif #(
 
   wire rst_n = rst_ni & en_i;
 
+  wire [NUM_LANES-1:0] rx_lane_rst_n;
+  wire [NUM_LANES-1:0] tx_lane_rst_n;
+
   wire [NUM_LANES-1:0] rx;
   wire [NUM_LANES-1:0] tx;
 
   for (genvar gi=0; gi<NUM_LANES; gi++) begin: g_lanes
 
-    wire rx_rst = rst_n & rx_lane_en_i[gi];
-    wire tx_rst = rst_n & tx_lane_en_i[gi];
+    assign rx_lane_rst_n[gi] = rst_n & rx_lane_en_i[gi];
+    assign tx_lane_rst_n[gi] = rst_n & tx_lane_en_i[gi];
 
     tthbif_rx_lane #(
       .NUM_FLOP_TAP         ( NUM_FLOP_TAP         ),
@@ -41,7 +44,7 @@ module tthbif #(
       .NUM_BUF_PER_COMB_TAP ( NUM_BUF_PER_COMB_TAP )
     ) u_rx_lane (
       .clk_i          ( clk_i                 ),
-      .rst_ni         ( rx_rst_n[gi]          ),
+      .rst_ni         ( rx_lane_rst_n[gi]     ),
     
       .comb_tap_sel_i ( rx_comb_tap_sel_i[gi] ),
       .flop_tap_sel_i ( rx_flop_tap_sel_i[gi] ),
@@ -56,7 +59,7 @@ module tthbif #(
       .NUM_BUF_PER_COMB_TAP ( NUM_BUF_PER_COMB_TAP )
     ) u_tx_lane (
       .clk_i          ( clk_i                 ),
-      .rst_ni         ( tx_rst_n[gi]          ),
+      .rst_ni         ( tx_lane_rst_n[gi]     ),
     
       .comb_tap_sel_i ( tx_comb_tap_sel_i[gi] ),
       .flop_tap_sel_i ( tx_flop_tap_sel_i[gi] ),
