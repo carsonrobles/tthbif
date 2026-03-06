@@ -8,8 +8,8 @@ module tthbif_tx_lane #(
   input  wire       clk_i,
   input  wire       rst_ni,
 
-  input  wire [1:0] comb_tap_sel_i,
-  input  wire [1:0] flop_tap_sel_i,
+  input  wire [$clog2(NUM_COMB_TAP)-1:0] comb_tap_sel_i,
+  input  wire [$clog2(NUM_FLOP_TAP)-1:0] flop_tap_sel_i,
 
   input  wire       tx_i,
   output wire       tx_o
