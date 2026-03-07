@@ -121,7 +121,9 @@ module tthbif #(
 
   end: g_lanes
 
-  assign data_o       = {rx_n, rx_p};
-  assign {tx_n, tx_p} = data_i;
+  assign data_o[7:4] = rx_n;
+  assign data_o[3:0] = rx_p;
+  assign tx_n        = data_i[3:0];
+  assign tx_p        = data_i[7:4];
 
 endmodule
