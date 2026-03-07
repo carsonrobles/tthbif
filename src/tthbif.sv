@@ -70,6 +70,8 @@ module tthbif #(
       .rx_o           ( rx_n[gi]              )
     );
 
+    wire [1:0] tx;
+
     tthbif_tx_lane #(
       .NUM_FLOP_TAP         ( NUM_FLOP_TAP         ),
       .NUM_COMB_TAP         ( NUM_COMB_TAP         ),
@@ -82,7 +84,7 @@ module tthbif #(
       .flop_tap_sel_i ( tx_flop_tap_sel_i[gi] ),
 
       .tx_i           ( tx_p[gi]              ),
-      .tx_o           ( tx_o[gi]              )
+      .tx_o           ( tx[0]                 )
     );
 
     tthbif_tx_lane #(
@@ -97,8 +99,10 @@ module tthbif #(
       .flop_tap_sel_i ( tx_flop_tap_sel_i[gi] ),
 
       .tx_i           ( tx_n[gi]              ),
-      .tx_o           ( tx_o[gi]              )
+      .tx_o           ( tx[1]                 )
     );
+
+    assign tx_o[gi] = (clk_i) ? tx[0] : tx[1];
 
   end: g_lanes
 
