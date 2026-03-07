@@ -21,8 +21,8 @@ module tthbif #(
   input  [NUM_LANES-1:0]                           rx_i,
   output [NUM_LANES-1:0]                           tx_o,
 
-  output [NUM_LANES-1:0]                           rx_o,
-  input  [NUM_LANES-1:0]                           tx_i
+  output [NUM_LANES-1:0]                           data_o,
+  input  [NUM_LANES-1:0]                           data_i
 );
 
   wire rst_n = rst_ni & en_i;
@@ -68,8 +68,8 @@ module tthbif #(
       .tx_o           ( tx_o[gi]              )
     );
 
-    assign rx_o[gi] = rx[gi];
-    assign tx[gi]   = tx_i[gi];
+    assign data_o[gi] = rx[gi];
+    assign tx[gi]     = data_i[gi];
 
   end: g_lanes
 
