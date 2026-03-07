@@ -117,7 +117,7 @@ module tthbif #(
 
     wire sel = p0 ^ p1;
 
-    assign tx_o[gi] = (sel) ? tx[1] : tx[0];
+    assign tx_o[gi] = (sel) ? tx[0] : tx[1];
 
   end: g_lanes
 
