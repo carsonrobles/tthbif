@@ -60,7 +60,7 @@ module tthbif #(
       .NUM_COMB_TAP         ( NUM_COMB_TAP         ),
       .NUM_BUF_PER_COMB_TAP ( NUM_BUF_PER_COMB_TAP )
     ) u_rx_lane_n (
-      .clk_i          ( clk_i                     ),
+      .clk_i          ( ~clk_i                    ),
       .rst_ni         ( rx_lane_rst_n[gi]         ),
 
       .comb_tap_sel_i ( rx_comb_tap_sel_i[gi][1] ),
@@ -92,7 +92,7 @@ module tthbif #(
       .NUM_COMB_TAP         ( NUM_COMB_TAP         ),
       .NUM_BUF_PER_COMB_TAP ( NUM_BUF_PER_COMB_TAP )
     ) u_tx_lane_n (
-      .clk_i          ( clk_i                     ),
+      .clk_i          ( ~clk_i                    ),
       .rst_ni         ( tx_lane_rst_n[gi]         ),
 
       .comb_tap_sel_i ( tx_comb_tap_sel_i[gi][1] ),
