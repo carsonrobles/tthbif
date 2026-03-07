@@ -102,7 +102,22 @@ module tthbif #(
       .tx_o           ( tx[1]                     )
     );
 
-    assign tx_o[gi] = tx[0] ^ tx[1]; //(clk_i) ? tx[0] : tx[1];
+    logic p0;
+    logic p1;
+
+    always_ff @(posedge clk_i) begin
+      if (~rst_ni) p0 <= 1'b0;
+      else         p0 <= ~p0;
+    end
+
+    always_ff @(negedge clk_i) begin
+      if (~rst_ni) p1 <= 1'b0;
+      else         p1 <= ~p1;
+    end
+
+    wire sel = p0 ^ p1;
+
+    assign tx_o[gi] = (sel) ? tx[1] : tx[0];
 
   end: g_lanes
 
