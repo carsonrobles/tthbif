@@ -5,24 +5,24 @@ module tthbif #(
   parameter int NUM_COMB_TAP         = 4,
   parameter int NUM_BUF_PER_COMB_TAP = 4
 ) (
-  input                                            clk_i,
-  input                                            rst_ni,
+  input                                                   clk_i,
+  input                                                   rst_ni,
 
-  input                                            en_i,
+  input                                                   en_i,
 
-  input  [NUM_LANES-1:0]                           rx_lane_en_i,
-  input  [NUM_LANES-1:0]                           tx_lane_en_i,
+  input  [  NUM_LANES-1:0]                                rx_lane_en_i,
+  input  [  NUM_LANES-1:0]                                tx_lane_en_i,
 
-  input  [NUM_LANES-1:0][$clog2(NUM_FLOP_TAP)-1:0] rx_flop_tap_sel_i,
-  input  [NUM_LANES-1:0][$clog2(NUM_COMB_TAP)-1:0] rx_comb_tap_sel_i,
-  input  [NUM_LANES-1:0][$clog2(NUM_FLOP_TAP)-1:0] tx_flop_tap_sel_i,
-  input  [NUM_LANES-1:0][$clog2(NUM_COMB_TAP)-1:0] tx_comb_tap_sel_i,
+  input  [  NUM_LANES-1:0][1:0][$clog2(NUM_FLOP_TAP)-1:0] rx_flop_tap_sel_i,
+  input  [  NUM_LANES-1:0][1:0][$clog2(NUM_COMB_TAP)-1:0] rx_comb_tap_sel_i,
+  input  [  NUM_LANES-1:0][1:0][$clog2(NUM_FLOP_TAP)-1:0] tx_flop_tap_sel_i,
+  input  [  NUM_LANES-1:0][1:0][$clog2(NUM_COMB_TAP)-1:0] tx_comb_tap_sel_i,
 
-  input  [NUM_LANES-1:0]                           rx_i,
-  output [NUM_LANES-1:0]                           tx_o,
+  input  [  NUM_LANES-1:0]                                rx_i,
+  output [  NUM_LANES-1:0]                                tx_o,
 
-  output [NUM_LANES-1:0]                           rx_o,
-  input  [NUM_LANES-1:0]                           tx_i
+  output [2*NUM_LANES-1:0]                                data_o,
+  input  [2*NUM_LANES-1:0]                                data_i
 );
 
   wire rst_n = rst_ni & en_i;
@@ -30,8 +30,10 @@ module tthbif #(
   wire [NUM_LANES-1:0] rx_lane_rst_n;
   wire [NUM_LANES-1:0] tx_lane_rst_n;
 
-  wire [NUM_LANES-1:0] rx;
-  wire [NUM_LANES-1:0] tx;
+  wire [NUM_LANES-1:0] rx_p;
+  wire [NUM_LANES-1:0] rx_n;
+  wire [NUM_LANES-1:0] tx_p;
+  wire [NUM_LANES-1:0] tx_n;
 
   for (genvar gi=0; gi<NUM_LANES; gi++) begin: g_lanes
 
@@ -42,35 +44,65 @@ module tthbif #(
       .NUM_FLOP_TAP         ( NUM_FLOP_TAP         ),
       .NUM_COMB_TAP         ( NUM_COMB_TAP         ),
       .NUM_BUF_PER_COMB_TAP ( NUM_BUF_PER_COMB_TAP )
-    ) u_rx_lane (
+    ) u_rx_lane_p (
       .clk_i          ( clk_i                 ),
       .rst_ni         ( rx_lane_rst_n[gi]     ),
-    
+
       .comb_tap_sel_i ( rx_comb_tap_sel_i[gi] ),
       .flop_tap_sel_i ( rx_flop_tap_sel_i[gi] ),
-    
+
       .rx_i           ( rx_i[gi]              ),
-      .rx_o           ( rx[gi]                )
+      .rx_o           ( rx_p[gi]              )
+    );
+
+    tthbif_rx_lane #(
+      .NUM_FLOP_TAP         ( NUM_FLOP_TAP         ),
+      .NUM_COMB_TAP         ( NUM_COMB_TAP         ),
+      .NUM_BUF_PER_COMB_TAP ( NUM_BUF_PER_COMB_TAP )
+    ) u_rx_lane_n (
+      .clk_i          ( clk_i                 ),
+      .rst_ni         ( rx_lane_rst_n[gi]     ),
+
+      .comb_tap_sel_i ( rx_comb_tap_sel_i[gi] ),
+      .flop_tap_sel_i ( rx_flop_tap_sel_i[gi] ),
+
+      .rx_i           ( rx_i[gi]              ),
+      .rx_o           ( rx_n[gi]              )
     );
 
     tthbif_tx_lane #(
       .NUM_FLOP_TAP         ( NUM_FLOP_TAP         ),
       .NUM_COMB_TAP         ( NUM_COMB_TAP         ),
       .NUM_BUF_PER_COMB_TAP ( NUM_BUF_PER_COMB_TAP )
-    ) u_tx_lane (
+    ) u_tx_lane_p (
       .clk_i          ( clk_i                 ),
       .rst_ni         ( tx_lane_rst_n[gi]     ),
-    
+
       .comb_tap_sel_i ( tx_comb_tap_sel_i[gi] ),
       .flop_tap_sel_i ( tx_flop_tap_sel_i[gi] ),
-    
-      .tx_i           ( tx[gi]                ),
+
+      .tx_i           ( tx_p[gi]              ),
       .tx_o           ( tx_o[gi]              )
     );
 
-    assign rx_o[gi] = rx[gi];
-    assign tx[gi]   = tx_i[gi];
+    tthbif_tx_lane #(
+      .NUM_FLOP_TAP         ( NUM_FLOP_TAP         ),
+      .NUM_COMB_TAP         ( NUM_COMB_TAP         ),
+      .NUM_BUF_PER_COMB_TAP ( NUM_BUF_PER_COMB_TAP )
+    ) u_tx_lane_n (
+      .clk_i          ( clk_i                 ),
+      .rst_ni         ( tx_lane_rst_n[gi]     ),
+
+      .comb_tap_sel_i ( tx_comb_tap_sel_i[gi] ),
+      .flop_tap_sel_i ( tx_flop_tap_sel_i[gi] ),
+
+      .tx_i           ( tx_n[gi]              ),
+      .tx_o           ( tx_o[gi]              )
+    );
 
   end: g_lanes
+
+  assign data_o       = {rx_n, rx_p};
+  assign {tx_n, tx_p} = data_i;
 
 endmodule
