@@ -102,7 +102,7 @@ module tthbif #(
       .tx_o           ( tx[1]                     )
     );
 
-    assign tx_o[gi] = (clk_i) ? tx[0] : tx[1];
+    assign tx_o[gi] = tx[0] ^ tx[1]; //(clk_i) ? tx[0] : tx[1];
 
   end: g_lanes
 
