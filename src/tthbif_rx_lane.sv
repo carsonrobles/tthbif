@@ -2,7 +2,7 @@
 
 module tthbif_rx_lane #(
   parameter int NUM_FLOP_TAP,
-  parameter int NUM_COMB_TAP,
+  parameter int NUM_COMB_TAP
 ) (
   input  wire       clk_i,
   input  wire       rst_ni,
