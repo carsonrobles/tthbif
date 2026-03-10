@@ -2,8 +2,7 @@
 
 module tthbif_tx_lane #(
   parameter int NUM_FLOP_TAP,
-  parameter int NUM_COMB_TAP,
-  parameter int NUM_BUF_PER_COMB_TAP
+  parameter int NUM_COMB_TAP
 ) (
   input  wire       clk_i,
   input  wire       rst_ni,
@@ -30,8 +29,7 @@ module tthbif_tx_lane #(
   );
 
   tthbif_comb_path #(
-    .NUM_TAP         ( NUM_COMB_TAP         ),
-    .NUM_BUF_PER_TAP ( NUM_BUF_PER_COMB_TAP )
+    .NUM_TAP         ( NUM_COMB_TAP )
   ) u_tthbif_comb_path (
     .tap_sel_i ( comb_tap_sel_i ),
   

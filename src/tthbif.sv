@@ -1,9 +1,8 @@
 module tthbif #(
-  parameter int NUM_LANES            = 1,
+  parameter int NUM_LANES    = 1,
 
-  parameter int NUM_FLOP_TAP         = 4,
-  parameter int NUM_COMB_TAP         = 4,
-  parameter int NUM_BUF_PER_COMB_TAP = 4
+  parameter int NUM_FLOP_TAP = 4,
+  parameter int NUM_COMB_TAP = 4
 ) (
   input                                                   clk_i,
   input                                                   rst_ni,
@@ -41,9 +40,8 @@ module tthbif #(
     assign tx_lane_rst_n[gi] = rst_n & tx_lane_en_i[gi];
 
     tthbif_rx_lane #(
-      .NUM_FLOP_TAP         ( NUM_FLOP_TAP         ),
-      .NUM_COMB_TAP         ( NUM_COMB_TAP         ),
-      .NUM_BUF_PER_COMB_TAP ( NUM_BUF_PER_COMB_TAP )
+      .NUM_FLOP_TAP         ( NUM_FLOP_TAP ),
+      .NUM_COMB_TAP         ( NUM_COMB_TAP )
     ) u_rx_lane_p (
       .clk_i          ( clk_i                     ),
       .rst_ni         ( rx_lane_rst_n[gi]         ),
@@ -56,9 +54,8 @@ module tthbif #(
     );
 
     tthbif_rx_lane #(
-      .NUM_FLOP_TAP         ( NUM_FLOP_TAP         ),
-      .NUM_COMB_TAP         ( NUM_COMB_TAP         ),
-      .NUM_BUF_PER_COMB_TAP ( NUM_BUF_PER_COMB_TAP )
+      .NUM_FLOP_TAP         ( NUM_FLOP_TAP ),
+      .NUM_COMB_TAP         ( NUM_COMB_TAP )
     ) u_rx_lane_n (
       .clk_i          ( ~clk_i                    ),
       .rst_ni         ( rx_lane_rst_n[gi]         ),
@@ -73,9 +70,8 @@ module tthbif #(
     wire [1:0] tx;
 
     tthbif_tx_lane #(
-      .NUM_FLOP_TAP         ( NUM_FLOP_TAP         ),
-      .NUM_COMB_TAP         ( NUM_COMB_TAP         ),
-      .NUM_BUF_PER_COMB_TAP ( NUM_BUF_PER_COMB_TAP )
+      .NUM_FLOP_TAP         ( NUM_FLOP_TAP ),
+      .NUM_COMB_TAP         ( NUM_COMB_TAP )
     ) u_tx_lane_p (
       .clk_i          ( clk_i                     ),
       .rst_ni         ( tx_lane_rst_n[gi]         ),
@@ -88,9 +84,8 @@ module tthbif #(
     );
 
     tthbif_tx_lane #(
-      .NUM_FLOP_TAP         ( NUM_FLOP_TAP         ),
-      .NUM_COMB_TAP         ( NUM_COMB_TAP         ),
-      .NUM_BUF_PER_COMB_TAP ( NUM_BUF_PER_COMB_TAP )
+      .NUM_FLOP_TAP         ( NUM_FLOP_TAP ),
+      .NUM_COMB_TAP         ( NUM_COMB_TAP )
     ) u_tx_lane_n (
       .clk_i          ( ~clk_i                    ),
       .rst_ni         ( tx_lane_rst_n[gi]         ),
